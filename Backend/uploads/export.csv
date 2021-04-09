@@ -1,0 +1,4 @@
+_id,name,email,age,team,createdAt,updatedAt,__v
+"606c2948d099765e6014de79","priyesh","pp@yopmail.com",22,"DC","2021-04-06T09:26:32.170Z","2021-04-07T04:05:56.598Z",""
+"606c538ee3cc5079727ad03d","dfd","yop@gm.com",12,"SRH","2021-04-06T12:26:54.927Z","2021-04-06T12:40:09.700Z",""
+"606c53a7e3cc5079727ad03f","anshita","anshita@yopmail.com",24,"PK","2021-04-06T12:27:19.230Z","2021-04-06T12:27:19.230Z",""
