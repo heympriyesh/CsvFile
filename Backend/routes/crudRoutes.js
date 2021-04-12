@@ -11,5 +11,4 @@ router.post('/upload',crudController.upload_File);
 router.delete('/delteDetails/:id',crudController.delete_Data);
 router.get('/validateData',crudController.validate_Data);
 router.post('/addFileDetails',crudController.add_File_Details);
-
 module.exports=router

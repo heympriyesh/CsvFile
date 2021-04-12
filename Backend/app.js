@@ -8,23 +8,16 @@ const csvRoutes=require('./routes/crudRoutes')
 const cors=require('cors')
 const Csvcrud=require('./models/Csvcrud')
 const fileUpload = require('express-fileupload');
-// const bodyParser = require('body-parser');
-// const crypto = require('crypto');
 const multer = require("multer");
-// const GridFsStorage = require('multer-gridfs-storage');
-// const Grid = require('gridfs-stream');
-// const methodOverride = require('method-override');
-const Multer=require('./models/Multer')
+const Multer=require('./models/Multer');
+const fileUploadRoutes=require('./GridFsChec')
 dotenv.config();
 
 const app=express();
 app.use(cors())
 app.use(express.json())
-// app.use(express.static('server'))
 app.use(fileUpload());
-// app.use(bodyParser.json());
 
-// app.use(methodOverride('_method'));
 
 const port=7000;
 const mongoURI = process.env.DB_CONNECTION;
@@ -45,6 +38,9 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
 }
 
 )
+mongoose.connection.once('open',()=>{
+    console.log("Event..");
+})
 
 app.get('/create',async (req,res)=>{
     try{
@@ -60,7 +56,7 @@ app.get('/create',async (req,res)=>{
 
 
 app.use(csvRoutes);
-
+app.use(fileUploadRoutes)
 app.listen(port, () => {
     console.log(`Server is up and running of port ${port}`)
 })

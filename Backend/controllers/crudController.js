@@ -28,6 +28,7 @@ module.exports.show_Data = async (req, res) => {
 module.exports.add_Data = async (req, res) => {
 
     // console.log("name",req.body)
+    check=check+1
     // console.log("Email",req.body.email)
     const { name, email, age, team } = req.body;
     try {
@@ -42,7 +43,7 @@ module.exports.update_Data=async (req,res)=>{
     const { name, email, age, team } = req.body;
     if(!name|| !email || !age || !team)
     {
-        return res.status(400).send("Field cannot be empty.")
+        return res.status(400).send("Field cannot be empty.")``````
     }
         try{
             const value = await Csvcrud.updateOne({ _id: req.params.id }, { $set: { name, email, age,team } })
@@ -96,6 +97,7 @@ module.exports.upload_File=async (req,res)=>{
         file.mv('./'+filename, function (err) {
             if (err) {
                 res.status(400).send(err)
+                check = check + 1
             } else {
                 console.log("else checking")
             //  await fs.createReadStream(filename)
@@ -134,13 +136,53 @@ module.exports.validate_Data=async (req,res)=>{
 }   
 module.exports.add_File_Details= async (req,res)=>{
     
-    console.log("Checking the body",req.body)
-
-    try{
-      const csv=  await Csvcrud.create(req.body)
-    //   console.log("Check it.",csv)
-    res.status(200).send("created..")
-    }catch(err){
-            res.status(400).json({err})
-    }
+    // console.log("Checking the body",req.body)
+    let arr=[];
+    let error=[];
+   const data=req.body;
+   console.log(data.length);
+   const length=data.length;
+   let check=0;
+   try{
+  await data.forEach(async(item)=>{
+       console.log("okk",item.email);
+     const find=await Csvcrud.findOne({email:item.email});
+    //  console.log(`find value ${item.email}`,find);
+    check=check+1
+    
+     if(!find&& length!==check)
+     {
+         console.log("Value not find....!!");
+         try {
+             const value = await Csvcrud.create({ name:item.name, email:item.email, age:item.age, team:item.team });
+            //  res.status(201).json({ value: value._id });
+           arr.push({"value":value._id}) 
+        //    console.log("lets",arr);
+         } catch (err) {
+             console.log("The error",err)
+            //  res.status(400).json({ err })
+         }
+     }else{
+         if(check===length)
+         {
+             res.status(400).json({arr})
+         }
+        // console.log("Value of check",check);
+     }
+    
+   })
+    // res.status(200).send("Done done")
+}catch(err)
+{
+    res.status(400).json({err})
 }
+    // try{
+    //   const csv=  await Csvcrud.insertMany(req.body)
+    // //   console.log("Check it.",csv)
+    // res.status(200).send("created..")
+    // }catch(err){
+    //     res.status(400).json({err})
+    // }
+}
+
+//

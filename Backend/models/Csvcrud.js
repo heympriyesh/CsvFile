@@ -30,7 +30,7 @@ const csvSchema = new mongoose.Schema({
         }
     }
 
-}, { timestamps: true })
+}, { timestamps: true },{unique:true})
 
 
 

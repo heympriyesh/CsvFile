@@ -21,7 +21,8 @@
     "react-json-to-csv": "^1.0.4",
     "react-scripts": "4.0.3",
     "react-table": "^7.6.3",
-    "web-vitals": "^1.1.1"
+    "web-vitals": "^1.1.1",
+    "xlsx": "^0.16.9"
   },
   "scripts": {
     "start": "react-scripts start",

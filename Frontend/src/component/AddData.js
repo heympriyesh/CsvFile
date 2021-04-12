@@ -1,10 +1,17 @@
 import React, { useState ,useContext} from 'react'
 import axios from 'axios'
+import CSVReader from 'react-csv-reader'
+import XLSX from "xlsx";
+import {make_cols} from './MakeColumns';
+import {SheetJSFT} from './types';
 import { ApiContext } from './ApiContext'
 const AddData = () => {
     const [value,setValue]=useState({})
     const { truevalue, settruevalue}=useContext(ApiContext)
-    console.log(truevalue)
+    const [file,setFile]=useState({});
+    const [data,setData]=useState([]);
+    const [cols,setCols]=useState([])
+    // console.log(truevalue)
     const teamName=[
         {
         team:"RCB"
@@ -77,9 +84,60 @@ const AddData = () => {
             console.log({err})
         })
     }
+    const make_cols = refstr => {
+        let o = [], C = XLSX.utils.decode_range(refstr).e.c + 1;
+        for (var i = 0; i < C; ++i) o[i] = { name: XLSX.utils.encode_col(i), key: i }
+        return o;
+    };
+    const convert=(e)=>{
+        const reader = new FileReader();
+        const rABS = !!reader.readAsBinaryString;
 
+        reader.onload = e => {
+            /* Parse data */
+            console.log("It's Result time",e.target.result);
+            const bstr = e.target.result;
+            const wb = XLSX.read(bstr, {
+                type: rABS ? "binary" : "array",
+                bookVBA: true
+            });
+            /* Get first worksheet */
+            const wsname = wb.SheetNames[0];
+            const ws = wb.Sheets[wsname];
+            /* Convert array of arrays */
+            const data = XLSX.utils.sheet_to_json(ws);
+            /* Update state */
+            // this.setState({ data: data, cols: make_cols(ws["!ref"]) }, () => {
+            //     console.log(JSON.stringify(data, null, 2));
+            // });
+            setCols(make_cols(ws["!ref"]))
+            setData(data);
+            console.log("Stringfy",JSON.stringify(data,null,2));
+        };
+
+        if (rABS) {
+            reader.readAsBinaryString(file);
+        } else {
+            reader.readAsArrayBuffer(file);
+        }
+    }
+ 
+    const handleFile=(e)=>{
+        const files=e.target.files;
+        console.log(files);
+        if(files && files[0]) setFile(files[0]);
+    }
     return (
         <div className="w-50 m-auto ">
+                {/* <input
+                type="file"
+                className="form-control"
+                id="file"
+                accept={SheetJSFT}
+                onChange={handleFile}
+               />
+
+            <button onClick={() => convert()}>Convert to json</button>  */}
             <form onSubmit={formHandle} className="form-group">
 
             <label>Name</label>
